@@ -10,6 +10,7 @@ jobs:
   test:
     strategy:
       matrix:
+        fail-fast: false
         node-version: ["14", "16", "18"]
         os: ["ubuntu-latest", "windows-latest", "macos-latest"]
     uses: ./.github/workflows/test-reusable.yml
