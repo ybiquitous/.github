@@ -16,7 +16,6 @@ on:
 
 jobs:
   test:
-    name: "test on node ${{ inputs.node-version }} and ${{ inputs.os }}"
     runs-on: ${{ inputs.os }}
     permissions:
       contents: read
