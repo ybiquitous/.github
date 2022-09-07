@@ -9,7 +9,12 @@
     "format": "npm run prettier:write",
     "test": "npm run lint"
   },
-  "dependencies": {
+  "devDependencies": {
+    "@commitlint/cli": "latest",
+    "@commitlint/config-conventional": "latest",
     "prettier": "latest"
+  },
+  "commitlint": {
+    "extends": "@commitlint/config-conventional"
   }
 }

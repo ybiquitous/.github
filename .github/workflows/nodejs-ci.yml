@@ -20,3 +20,6 @@ jobs:
 
   lint:
     uses: ./.github/workflows/nodejs-lint-reusable.yml
+
+  commitlint:
+    uses: ./.github/workflows/nodejs-commitlint-reusable.yml
