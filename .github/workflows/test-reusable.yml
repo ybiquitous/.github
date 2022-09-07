@@ -1,6 +1,6 @@
 name: Test
 
-non:
+on:
   workflow_call:
     inputs:
       node-version:
