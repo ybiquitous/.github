@@ -13,10 +13,10 @@ jobs:
       matrix:
         node-version: ["14", "16", "18"]
         os: ["ubuntu-latest"]
-    uses: ./.github/workflows/test-reusable.yml
+    uses: ./.github/workflows/nodejs-test-reusable.yml
     with:
       node-version: ${{ matrix.node-version }}
       os: ${{ matrix.os }}
 
   lint:
-    uses: ./.github/workflows/lint-reusable.yml
+    uses: ./.github/workflows/nodejs-lint-reusable.yml
