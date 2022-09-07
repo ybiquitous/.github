@@ -1,0 +1,12 @@
+{
+  "name": "@ybiquitous/.github",
+  "private": true,
+  "scripts": {
+    "prettier": "npx prettier --cache --ignore-path .gitignore .",
+    "prettier:check": "npm run prettier -- --check",
+    "prettier:write": "npm run prettier -- --write",
+    "lint": "npm run prettier:check",
+    "format": "npm run prettier:write",
+    "test": "npm run lint"
+  }
+}
