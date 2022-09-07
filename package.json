@@ -8,5 +8,8 @@
     "lint": "npm run prettier:check",
     "format": "npm run prettier:write",
     "test": "npm run lint"
+  },
+  "dependencies": {
+    "prettier": "latest"
   }
 }
