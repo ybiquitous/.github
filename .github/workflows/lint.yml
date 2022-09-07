@@ -1,0 +1,11 @@
+name: Test
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  lint:
+    uses: ./.github/workflows/lint-reusable.yml
