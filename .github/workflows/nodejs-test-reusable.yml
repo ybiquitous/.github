@@ -1,4 +1,4 @@
-name: Test (reusable)
+name: Node.js Test (reusable)
 
 on:
   workflow_call:

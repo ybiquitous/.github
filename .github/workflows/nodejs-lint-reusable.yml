@@ -1,4 +1,4 @@
-name: Lint (reusable)
+name: Node.js Lint (reusable)
 
 on:
   workflow_call:
