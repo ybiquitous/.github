@@ -2,29 +2,17 @@ name: Lint (reusable)
 
 on:
   workflow_call:
-    inputs:
-      node-version:
-        description: Node.js version
-        required: false
-        default: "lts/*"
-        type: string
-      os:
-        description: OS name
-        required: false
-        default: "ubuntu-latest"
-        type: string
 
 jobs:
   lint:
-    name: "lint on node ${{ inputs.node-version }} and ${{ inputs.os }}"
-    runs-on: ${{ inputs.os }}
+    runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: ${{ inputs.node-version }}
+          node-version: "lts/*"
           cache: npm
       - run: npm --global install npm@latest
       - run: npm ci
