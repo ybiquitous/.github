@@ -5,10 +5,10 @@
     "prettier": "prettier --cache --ignore-path .gitignore .",
     "prettier:check": "npm run prettier -- --check",
     "prettier:write": "npm run prettier -- --write",
-    "commitlint": "commitlint --from HEAD~3",
+    "commitlint": "commitlint --from HEAD~5",
     "lint": "npm run prettier:check",
     "format": "npm run prettier:write",
-    "test": "npm run lint"
+    "test": "npm run lint && npm run commitlint"
   },
   "devDependencies": {
     "@commitlint/cli": "latest",
