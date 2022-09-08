@@ -8,6 +8,11 @@ on:
         required: false
         default: true
         type: boolean
+      create-release:
+        description: Set true if creating release
+        required: false
+        default: true
+        type: boolean
     secrets:
       npm-token:
         required: false
@@ -31,6 +36,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.npm-token }}
       - name: Create GitHub release
+        if: ${{ inputs.create-release }}
         run: |
           echo "See the [changelog](https://github.com/${GITHUB_REPOSITORY}/blob/${GITHUB_REF_NAME}/CHANGELOG.md) for details." >> notes.txt
 
