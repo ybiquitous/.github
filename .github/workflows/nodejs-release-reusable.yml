@@ -1,0 +1,42 @@
+name: Node.js Release (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      publish:
+        description: Publish to registry
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "lts/*"
+          registry-url: "https://registry.npmjs.org"
+          cache: npm
+      - run: npm --global install npm@latest
+      - run: npm ci
+      - run: npm publish
+        if: ${{ inputs.publish }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: |
+          echo "See the [changelog](https://github.com/${GITHUB_REPOSITORY}/blob/${GITHUB_REF_NAME}/CHANGELOG.md) for more details." >> notes.txt
+
+          prev_tag_name=$(gh release view --json tagName --jq .tagName || echo '')
+
+          if [ -n "${prev_tag_name}" ]; then
+            echo ''
+            echo "https://github.com/${GITHUB_REPOSITORY}/compare/${prev_tag_name}...${GITHUB_REF_NAME}" >> notes.txt
+          fi
+
+          gh release create "${GITHUB_REF_NAME}" --notes-file notes.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
