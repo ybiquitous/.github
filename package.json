@@ -8,7 +8,7 @@
     "commitlint": "commitlint --from HEAD~5",
     "lint": "npm run prettier:check && npm run commitlint",
     "format": "npm run prettier:write",
-    "test": "npm run lint"
+    "test": "echo \"No tests!\""
   },
   "devDependencies": {
     "@commitlint/cli": "latest",
