@@ -7,3 +7,5 @@ on:
 jobs:
   release:
     uses: ./.github/workflows/nodejs-release-reusable.yml
+    with:
+      publish: false

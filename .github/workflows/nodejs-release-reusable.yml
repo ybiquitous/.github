@@ -2,9 +2,14 @@ name: Node.js Release (reusable)
 
 on:
   workflow_call:
+    inputs:
+      publish:
+        description: Set true if publishing to registry
+        required: false
+        default: true
+        type: boolean
     secrets:
       npm-token:
-        description: npm token
         required: false
 
 jobs:
@@ -22,7 +27,7 @@ jobs:
       - run: npm --global install npm@latest
       - run: npm ci
       - run: npm publish
-        if: ${{ secrets.npm-token }}
+        if: ${{ inputs.publish }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.npm-token }}
       - name: Create GitHub release
