@@ -6,7 +6,7 @@ on:
       publish:
         description: Publish to registry
         required: false
-        default: false
+        default: true
         type: boolean
 
 jobs:
