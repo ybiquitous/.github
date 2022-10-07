@@ -15,6 +15,7 @@ on:
         type: boolean
     secrets:
       npm-token:
+        description: Auth token for npm registry
         required: false
 
 jobs:
