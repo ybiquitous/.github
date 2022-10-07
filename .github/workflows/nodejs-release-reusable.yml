@@ -52,6 +52,6 @@ jobs:
             echo "https://github.com/${GITHUB_REPOSITORY}/compare/${prev_tag_name}...${GITHUB_REF_NAME}" >> notes.txt
           fi
 
-          gh release create "${GITHUB_REF_NAME}" --notes-file notes.txt
+          gh release create "${GITHUB_REF_NAME}" --notes-file notes.txt --draft
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
