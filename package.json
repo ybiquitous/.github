@@ -1,5 +1,6 @@
 {
   "name": "@ybiquitous/.github",
+  "version": "0.0.8",
   "private": true,
   "scripts": {
     "prettier": "prettier --cache --ignore-path .gitignore .",
