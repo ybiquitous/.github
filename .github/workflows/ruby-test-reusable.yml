@@ -1,0 +1,55 @@
+name: Ruby Test (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      ruby-version:
+        description: Ruby version
+        required: false
+        default: '["2.7", "3.0", "3.1", "head"]'
+        type: string
+      ruby-version-lint:
+        description: Ruby version
+        required: false
+        default: "3.1"
+        type: string
+      os:
+        description: OS name
+        required: false
+        default: '["ubuntu-latest", "windows-latest"]'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby-version: ${{ fromJson(inputs.ruby-version) }}
+        os: ${{ fromJson(inputs.os) }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up Ruby ${{ matrix.ruby-version }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true
+      - name: Run test
+        run: bundle exec rake test
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up Ruby ${{ inputs.ruby-version }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ inputs.ruby-version-lint }}
+          bundler-cache: true
+      - name: Run lint
+        run: bundle exec rake lint

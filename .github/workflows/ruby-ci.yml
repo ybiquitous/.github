@@ -1,0 +1,11 @@
+name: Ruby CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  test:
+    uses: ./.github/workflows/ruby-test-reusable.yml
