@@ -8,8 +8,8 @@ on:
         required: false
         default: '["2.7", "3.0", "3.1", "head"]'
         type: string
-      ruby-version-lint:
-        description: Ruby version
+      default-ruby-version:
+        description: Default Ruby version
         required: false
         default: "3.1"
         type: string
@@ -46,10 +46,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Set up Ruby ${{ inputs.ruby-version }}
+      - name: Set up Ruby ${{ inputs.default-ruby-version }}
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ inputs.ruby-version-lint }}
+          ruby-version: ${{ inputs.default-ruby-version }}
           bundler-cache: true
       - name: Run lint
         run: bundle exec rake lint
