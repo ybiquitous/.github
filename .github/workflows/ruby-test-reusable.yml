@@ -24,6 +24,7 @@ permissions:
 
 jobs:
   test:
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
@@ -42,6 +43,7 @@ jobs:
         run: bundle exec rake test
 
   lint:
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
