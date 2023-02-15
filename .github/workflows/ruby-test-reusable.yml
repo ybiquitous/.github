@@ -6,7 +6,7 @@ on:
       ruby-version:
         description: Ruby version
         required: false
-        default: '["2.7", "3.0", "3.1", "3.2", "head"]'
+        default: ""
         type: string
       default-ruby-version:
         description: Default Ruby version
@@ -23,12 +23,18 @@ permissions:
   contents: read
 
 jobs:
+  ruby-versions:
+    uses: ruby/actions/.github/workflows/ruby_versions.yml@master
+    with:
+      engine: cruby
+
   test:
+    needs: ruby-versions
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        ruby-version: ${{ fromJson(inputs.ruby-version) }}
+        ruby-version: ${{ fromJson(inputs.ruby-version || needs.ruby-versions.outputs.versions) }}
         os: ${{ fromJson(inputs.os) }}
     runs-on: ${{ matrix.os }}
     steps:

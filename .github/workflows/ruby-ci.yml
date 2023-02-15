@@ -9,6 +9,3 @@ on:
 jobs:
   test:
     uses: ./.github/workflows/ruby-test-reusable.yml
-    with:
-      ruby-version: '["head"]'
-      os: '["ubuntu-latest"]'
