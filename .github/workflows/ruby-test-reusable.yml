@@ -11,7 +11,7 @@ on:
       default-ruby-version:
         description: Default Ruby version
         required: false
-        default: "3.2"
+        default: "ruby" # latest
         type: string
       os:
         description: OS name
