@@ -4,14 +4,14 @@ Common GitHub stuffs in [github.com/ybiquitous](https://github.com/ybiquitous).
 
 ## Reusable workflows
 
-### For Ruby
+### Ruby
 
 - [Ruby Test](.github/workflows/ruby-test-reusable.yml)
 - [Ruby Release](.github/workflows/ruby-release-reusable.yml)
 
 See an [example](.github/workflows/ruby-ci.yml).
 
-### For Node.js
+### Node.js
 
 - [Node.js Test](.github/workflows/nodejs-test-reusable.yml)
 - [Node.js Lint](.github/workflows/nodejs-lint-reusable.yml)
