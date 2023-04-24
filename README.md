@@ -1,3 +1,20 @@
 # .github
 
-- Define [reusable workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows). See [`.github/workflows/`](.github/workflows).
+Common GitHub stuffs in [github.com/ybiquitous](https://github.com/ybiquitous).
+
+## Reusable workflows
+
+### Ruby
+
+- [Test](.github/workflows/ruby-test-reusable.yml)
+- [Release](.github/workflows/ruby-release-reusable.yml)
+
+See an [example](.github/workflows/ruby-ci.yml).
+
+### Node.js
+
+- [Test](.github/workflows/nodejs-test-reusable.yml)
+- [Lint](.github/workflows/nodejs-lint-reusable.yml)
+- [Release](.github/workflows/nodejs-release-reusable.yml)
+
+See an [example](.github/workflows/nodejs-ci.yml).
