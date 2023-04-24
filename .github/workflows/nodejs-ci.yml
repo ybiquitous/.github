@@ -19,4 +19,4 @@ jobs:
       os: ${{ matrix.os }}
 
   lint:
-    use: ./.github/workflows/nodejs-lint-reusable.yml
+    uses: ./.github/workflows/nodejs-lint-reusable.yml
