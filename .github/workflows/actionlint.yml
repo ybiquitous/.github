@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Download problem matcher definition
+        run: curl -fsL https://raw.githubusercontent.com/rhysd/actionlint/main/.github/actionlint-matcher.json > .github/actionlint-matcher.json
       - name: Run actionlint
         uses: docker://rhysd/actionlint:latest
         with:
