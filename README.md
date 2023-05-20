@@ -21,6 +21,6 @@ See the [example](.github/workflows/nodejs-ci.yml).
 
 ### Dependabot
 
-- [Auto-merge](.github/workflows/dependabot-automerge-reusable.yml)
+- [Auto-merge](.github/workflows/dependabot-auto-merge-reusable.yml)
 
-See the [example](.github/workflows/dependabot-automerge.yml).
+See the [example](.github/workflows/dependabot-auto-merge.yml).
