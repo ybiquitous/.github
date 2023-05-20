@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       excluded-update-types:
-        description: Update types to exclude (JSON format)
+        description: Update-types to exclude (JSON format)
         required: false
         default: '["version-update:semver-major"]'
         type: string
