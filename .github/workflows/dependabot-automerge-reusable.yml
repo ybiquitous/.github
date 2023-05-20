@@ -1,0 +1,33 @@
+name: Dependabot auto-merge
+
+on:
+  workflow_call:
+    inputs:
+      excluded-update-types:
+        description: Update types to exclude (JSON format)
+        required: false
+        default: '["version-update:semver-major"]'
+        type: string
+      merge-option:
+        description: Merge option. Must be one of `merge`, `squash`, or `rebase`
+        required: false
+        default: "squash"
+        type: string
+
+jobs:
+  automerge:
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1
+      - name: Enable auto-merge
+        if: ${{ !contains(fromJSON(inputs.excluded-update-types), steps.metadata.outputs.update-type) }}
+        run: gh pr merge --auto "--${MERGE_OPTION}" "$PR_URL"
+        env:
+          MERGE_OPTION: ${{ inputs.merge-option }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ github.token }}
