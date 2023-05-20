@@ -15,7 +15,7 @@ on:
         type: string
 
 jobs:
-  automerge:
+  auto-merge:
     if: ${{ github.actor == 'dependabot[bot]' }}
     runs-on: ubuntu-latest
     permissions:

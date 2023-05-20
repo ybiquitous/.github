@@ -5,5 +5,5 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  automerge:
-    uses: ./.github/workflows/dependabot-automerge-reusable.yml
+  auto-merge:
+    uses: ./.github/workflows/dependabot-auto-merge-reusable.yml
