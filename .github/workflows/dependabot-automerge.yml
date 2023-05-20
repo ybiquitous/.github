@@ -1,0 +1,9 @@
+name: Dependabot auto-merge
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  automerge:
+    uses: ./.github/workflows/dependabot-automerge-reusable.yml
