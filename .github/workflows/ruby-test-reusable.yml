@@ -32,7 +32,7 @@ jobs:
     uses: ruby/actions/.github/workflows/ruby_versions.yml@master
     with:
       engine: cruby
-      min_version: ${{ inputs.minimum-ruby-version }}
+      min_version: ${{ inputs.minimum-ruby-version || 0 }}
 
   test:
     needs: ruby-versions
