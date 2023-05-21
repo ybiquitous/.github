@@ -13,6 +13,10 @@ on:
         required: false
         default: "ruby" # latest
         type: string
+      minimum-ruby-version:
+        description: Minimum Ruby version
+        required: false
+        type: number
       os:
         description: OS name
         required: false
@@ -27,6 +31,7 @@ jobs:
     uses: ruby/actions/.github/workflows/ruby_versions.yml@master
     with:
       engine: cruby
+      min_version: ${{ inputs.minimum-ruby-version }}
 
   test:
     needs: ruby-versions
