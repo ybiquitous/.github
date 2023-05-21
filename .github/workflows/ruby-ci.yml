@@ -11,3 +11,8 @@ jobs:
     uses: ./.github/workflows/ruby-test-reusable.yml
     with:
       os: '["ubuntu-latest"]'
+
+  test-minimum:
+    uses: ./.github/workflows/ruby-test-reusable.yml
+    with:
+      minimum-ruby-version: 3.2
