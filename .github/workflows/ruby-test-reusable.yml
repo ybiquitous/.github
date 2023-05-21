@@ -14,7 +14,7 @@ on:
         default: "ruby" # latest
         type: string
       minimum-ruby-version:
-        description: Default Ruby version
+        description: Minimum Ruby version
         required: false
         type: number
       os:
