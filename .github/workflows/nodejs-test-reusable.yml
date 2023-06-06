@@ -8,10 +8,24 @@ on:
         required: false
         default: "lts/*"
         type: string
+      node-version-coverage:
+        description: Node.js version for test coverage
+        required: false
+        type: string
       os:
         description: OS name
         required: false
-        default: "ubuntu-latest"
+        default: ubuntu-latest
+        type: string
+      coverage-name:
+        description: Name for coverage artifacts
+        required: false
+        default: coverage
+        type: string
+      coverage-path:
+        description: Path to coverage artifacts
+        required: false
+        default: coverage/
         type: string
 
 jobs:
@@ -23,14 +37,30 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
       - name: Set up Node.js ${{ inputs.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ inputs.node-version }}
           cache: npm
+
       - name: Install latest npm
         run: npm --global install npm@latest && npm -v
+
       - name: Install dependencies
         run: npm ci
+
       - name: Run test
         run: npm test --ignore-scripts
+        if: ${{ inputs.node-version != inputs.node-version-coverage }}
+
+      - name: Run test with coverage
+        run: npm run test:coverage --ignore-scripts
+        if: ${{ inputs.node-version == inputs.node-version-coverage }}
+
+      - uses: actions/upload-artifact@v3
+        if: ${{ inputs.node-version == inputs.node-version-coverage }}
+        with:
+          name: ${{ inputs.coverage-name }}
+          path: ${{ inputs.coverage-path }}
+          retention-days: 1
