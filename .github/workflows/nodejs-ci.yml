@@ -27,6 +27,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: coverage
+      - run: file coverage/sample.json
 
   lint:
     uses: ./.github/workflows/nodejs-lint-reusable.yml
