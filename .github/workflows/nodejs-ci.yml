@@ -11,12 +11,24 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: ["lts/*"]
+        node-version: ["lts/*", "20"]
         os: ["ubuntu-latest"]
     uses: ./.github/workflows/nodejs-test-reusable.yml
     with:
       node-version: ${{ matrix.node-version }}
       os: ${{ matrix.os }}
+      node-version-coverage: "20"
+      coverage-name: coverage
+
+  show-coverage:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: coverage
+          path: downloaded/
+      - run: ls -lR downloaded/
 
   lint:
     uses: ./.github/workflows/nodejs-lint-reusable.yml
