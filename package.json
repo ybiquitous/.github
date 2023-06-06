@@ -9,7 +9,8 @@
     "commitlint": "commitlint --from HEAD~5",
     "lint": "npm run prettier:check && npm run commitlint",
     "format": "npm run prettier:write",
-    "test": "echo \"No tests!\""
+    "test": "echo \"No tests!\"",
+    "test:coverage": "mkdir coverage && touch coverage/sample.json"
   },
   "devDependencies": {
     "@commitlint/cli": "latest",
