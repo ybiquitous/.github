@@ -10,7 +10,7 @@
     "lint": "npm run prettier:check && npm run commitlint",
     "format": "npm run prettier:write",
     "test": "echo \"No tests!\"",
-    "test:coverage": "mkdir coverage && touch coverage/sample.json"
+    "test:coverage": "node -e \"fs.mkdirSync('coverage', {recursive: true}); fs.writeFileSync('coverage/sample.json', '[1, false]');\""
   },
   "devDependencies": {
     "@commitlint/cli": "latest",
