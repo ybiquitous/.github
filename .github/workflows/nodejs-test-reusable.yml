@@ -48,7 +48,11 @@ jobs:
         shell: bash
         # NOTE: npm v10 has dropped support for Node.js v16.
         run: |
-          npm install --global npm@latest || npm install --global npm@9
+          if [[ $(node -v) =~ ^v(16|14|12|10)\. ]]; then
+            npm install --global npm@9
+          else
+            npm install --global npm@latest
+          fi
           npm -v
 
       - name: Install dependencies
