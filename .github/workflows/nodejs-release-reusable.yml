@@ -35,7 +35,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           cache: npm
       - name: Install latest npm
-        run: npm --global install npm@latest && npm -v
+        run: npm install --global npm@latest && npm -v
       - name: Install dependencies
         run: npm ci
       - name: Publish to npm registry
