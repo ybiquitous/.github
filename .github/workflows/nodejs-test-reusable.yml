@@ -45,7 +45,11 @@ jobs:
           cache: npm
 
       - name: Install latest npm
-        run: npm --global install npm@latest && npm -v
+        shell: bash
+        # NOTE: npm v10 has dropped support for Node.js v16.
+        run: |
+          npm install --global npm@latest || npm install --global npm@9
+          npm -v
 
       - name: Install dependencies
         run: npm ci

@@ -20,7 +20,7 @@ jobs:
           node-version: "lts/*"
           cache: npm
       - name: Install latest npm
-        run: npm --global install npm@latest && npm -v
+        run: npm install --global npm@latest && npm -v
       - name: Install dependencies
         run: npm ci
       - name: Run lint
