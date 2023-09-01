@@ -44,7 +44,7 @@ jobs:
           node-version: ${{ inputs.node-version }}
           cache: npm
 
-      - name: Install latest npm
+      - name: Update npm to latest
         shell: bash
         # NOTE: npm v10 has dropped support for Node.js v16.
         run: |
@@ -53,7 +53,7 @@ jobs:
           else
             npm install --global npm@latest
           fi
-          npm -v
+          echo "Updated npm to $(npm -v)"
 
       - name: Install dependencies
         run: npm ci
