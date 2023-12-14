@@ -6,22 +6,15 @@ on:
       ruby-version:
         description: Ruby version
         required: false
-        default: "3.2"
+        default: "ruby" # latest
         type: string
-      otp:
-        description: One-time password for RubyGems.org
-        required: true
-        type: string
-    secrets:
-      api-key:
-        description: API key for RubyGems.org
-        required: true
 
 jobs:
   release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      id-token: write
     timeout-minutes: 10
     steps:
       - name: Checkout
@@ -31,15 +24,8 @@ jobs:
         with:
           ruby-version: ${{ inputs.ruby-version }}
           bundler-cache: true
-      - name: Configure Git
-        run: |
-          git config --global user.name "${GITHUB_ACTOR}"
-          git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-      - name: Publish to gem registry
-        run: bundle exec rake release
-        env:
-          GEM_HOST_API_KEY: ${{ secrets.api-key }}
-          GEM_HOST_OTP_CODE: ${{ inputs.otp }}
+      - name: Publish gem to RubyGems.org
+        uses: rubygems/release-gem@v1
       - name: Push tag
         run: git push --follow-tags
       - name: Get tag
