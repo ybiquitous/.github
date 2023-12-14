@@ -35,16 +35,14 @@ jobs:
         run: |
           git config --global user.name "${GITHUB_ACTOR}"
           git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-      - name: Publish to gem registry
+      - name: Release gem
         run: bundle exec rake release
         env:
           GEM_HOST_API_KEY: ${{ secrets.api-key }}
           GEM_HOST_OTP_CODE: ${{ inputs.otp }}
-      - name: Push tag
-        run: git push --follow-tags
-      - name: Get tag
-        run: echo "TAG_NAME=$(git describe --abbrev=0)" >> "${GITHUB_ENV}"
       - name: Create GitHub release
-        run: gh release create "${TAG_NAME}" --draft
+        run: |
+          tag_name="$(git describe --tags --abbrev=0)"
+          gh release create "${tag_name}" --verify-tag --draft
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
