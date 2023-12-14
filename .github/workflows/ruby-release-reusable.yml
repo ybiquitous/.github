@@ -26,11 +26,9 @@ jobs:
           bundler-cache: true
       - name: Publish gem to RubyGems.org
         uses: rubygems/release-gem@v1
-      - name: Push tag
-        run: git push --follow-tags
-      - name: Get tag
-        run: echo "TAG_NAME=$(git describe --abbrev=0)" >> "${GITHUB_ENV}"
       - name: Create GitHub release
-        run: gh release create "${TAG_NAME}" --draft
+        run: |
+          tag_name="$(git describe --tags --abbrev=0)"
+          gh release create "${tag_name}" --verify-tag --draft
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
