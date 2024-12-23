@@ -46,13 +46,18 @@ jobs:
 
       - name: Update npm to latest
         shell: bash
-        # NOTE: npm v10 has dropped support for Node.js v16.
         run: |
-          if [[ $(node -v) =~ ^v(16|14|12|10)\. ]]; then
-            npm install --global npm@9
-          else
-            npm install --global npm@latest
-          fi
+          case $(node -v) in
+            v16.*|v14.*|v12.*|v10.*)
+              npm install --global npm@9
+              ;;
+            v18.*)
+              npm install --global npm@10
+              ;;
+            *)
+              npm install --global npm@latest
+              ;;
+          esac
           echo "Successfully updated npm to $(npm -v)"
 
       - name: Install dependencies
