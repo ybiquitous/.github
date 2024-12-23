@@ -50,18 +50,19 @@ jobs:
         run: |
           case $(node -v) in
             v16.*|v14.*|v12.*|v10.*)
-              npm_version=9
+              major_version=9
               ;;
             v18.*)
-              npm_version=10
+              major_version=10
               ;;
             *)
-              npm_version=latest
               echo "latest=true" >> "${GITHUB_OUTPUT}"
+              echo "version=$(npm view npm version)" >> "${GITHUB_OUTPUT}"
+              exit 0
               ;;
           esac
-          npm_version=$(npm view "npm@${npm_version}" version)
-          echo "version=${npm_version}" >> "${GITHUB_OUTPUT}"
+          version=$(npm view "npm@${major_version}" version --json | jq -r '.[-1]')
+          echo "version=${version}" >> "${GITHUB_OUTPUT}"
 
       - name: Update npm to ${{ steps.npm-version.outputs.version }}${{ steps.npm-version.outputs.latest && ' (latest)' }}
         shell: bash
