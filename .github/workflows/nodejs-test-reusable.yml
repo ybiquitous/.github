@@ -44,21 +44,31 @@ jobs:
           node-version: ${{ inputs.node-version }}
           cache: npm
 
-      - name: Update npm to latest
+      - name: Get npm version
+        id: npm-version
         shell: bash
         run: |
           case $(node -v) in
             v16.*|v14.*|v12.*|v10.*)
-              npm install --global npm@9
+              major_version=9
               ;;
             v18.*)
-              npm install --global npm@10
+              major_version=10
               ;;
             *)
-              npm install --global npm@latest
+              echo "latest=true" >> "${GITHUB_OUTPUT}"
+              echo "version=$(npm view npm version)" >> "${GITHUB_OUTPUT}"
+              exit 0
               ;;
           esac
-          echo "Successfully updated npm to $(npm -v)"
+          version=$(npm view "npm@${major_version}" version --json | jq -r '.[-1]')
+          echo "version=${version}" >> "${GITHUB_OUTPUT}"
+
+      - name: Update npm to ${{ steps.npm-version.outputs.version }}${{ steps.npm-version.outputs.latest && ' (latest)' }}
+        shell: bash
+        env:
+          npm_version: ${{ steps.npm-version.outputs.version }}
+        run: npm install --global "npm@${npm_version}"
 
       - name: Install dependencies
         run: npm ci
