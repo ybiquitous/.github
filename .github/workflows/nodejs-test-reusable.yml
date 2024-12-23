@@ -57,11 +57,13 @@ jobs:
               ;;
             *)
               npm_version=latest
+              echo "latest=true" >> "${GITHUB_OUTPUT}"
               ;;
           esac
+          npm_version=$(npm view "npm@${npm_version}" version)
           echo "version=${npm_version}" >> "${GITHUB_OUTPUT}"
 
-      - name: Update npm to ${{ steps.npm-version.outputs.version }}
+      - name: Update npm to ${{ steps.npm-version.outputs.version }}${{ steps.npm-version.outputs.latest && ' (latest)' }}
         shell: bash
         env:
           npm_version: ${{ steps.npm-version.outputs.version }}
