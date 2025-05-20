@@ -28,35 +28,50 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Set up Node.js LTS
         uses: actions/setup-node@v4
         with:
           node-version: "lts/*"
           registry-url: "https://registry.npmjs.org"
           cache: npm
+
       - name: Update npm to latest
+        shell: bash
         run: |
           npm install --global npm@latest
           echo "Successfully updated npm to $(npm -v)"
+
       - name: Install dependencies
         run: npm ci
+
       - name: Publish to npm registry
-        run: npm publish
         if: ${{ inputs.publish }}
+        shell: bash
+        run: |
+          npm publish
+          package_name=$(jq -r '.name' package.json)
+          echo "::notice::Published https://www.npmjs.com/package/${package_name}"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.npm-token }}
+
       - name: Create GitHub release
         if: ${{ inputs.create-release }}
+        shell: bash
         run: |
-          echo "See the [changelog](https://github.com/${GITHUB_REPOSITORY}/blob/${GITHUB_REF_NAME}/CHANGELOG.md) for details." >> notes.txt
+          notes_file="${RUNNER_TEMP}/notes.txt"
+          echo "See the [changelog](https://github.com/${GITHUB_REPOSITORY}/blob/${GITHUB_REF_NAME}/CHANGELOG.md) for details." >> "${notes_file}"
 
           prev_tag_name=$(gh release view --json tagName --jq .tagName || echo '')
 
-          if [ -n "${prev_tag_name}" ]; then
-            echo '' >> notes.txt
-            echo "https://github.com/${GITHUB_REPOSITORY}/compare/${prev_tag_name}...${GITHUB_REF_NAME}" >> notes.txt
+          if [[ -n "${prev_tag_name}" ]]; then
+            echo '' >> "${notes_file}"
+            echo "https://github.com/${GITHUB_REPOSITORY}/compare/${prev_tag_name}...${GITHUB_REF_NAME}" >> "${notes_file}"
           fi
 
-          gh release create "${GITHUB_REF_NAME}" --notes-file notes.txt --draft
+          gh release create "${GITHUB_REF_NAME}" --notes-file "${notes_file}" --draft
+
+          release_url=$(gh release view "${GITHUB_REF_NAME}" --json 'url' --jq '.url')
+          echo "::notice::Released ${release_url} as draft. Edit it to publish."
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
