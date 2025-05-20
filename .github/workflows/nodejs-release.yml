@@ -15,3 +15,4 @@ jobs:
       publish: false
     permissions:
       contents: write
+      id-token: write
