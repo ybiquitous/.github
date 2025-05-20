@@ -7,3 +7,5 @@ on:
 jobs:
   auto-merge:
     uses: ./.github/workflows/dependabot-auto-merge-reusable.yml
+    permissions:
+      contents: write

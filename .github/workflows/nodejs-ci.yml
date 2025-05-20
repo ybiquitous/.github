@@ -19,6 +19,8 @@ jobs:
       os: ${{ matrix.os }}
       node-version-coverage: "20"
       coverage-name: coverage
+    permissions:
+      contents: read
 
   show-coverage:
     needs: test
@@ -32,3 +34,5 @@ jobs:
 
   lint:
     uses: ./.github/workflows/nodejs-lint-reusable.yml
+    permissions:
+      contents: read
