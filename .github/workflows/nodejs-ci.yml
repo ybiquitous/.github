@@ -25,6 +25,8 @@ jobs:
   show-coverage:
     needs: test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/download-artifact@v4
         with:
