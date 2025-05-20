@@ -25,6 +25,9 @@ jobs:
       contents: write
       id-token: write
     timeout-minutes: 10
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -37,7 +40,6 @@ jobs:
           cache: npm
 
       - name: Update npm to latest
-        shell: bash
         run: |
           npm install --global npm@latest
           echo "Successfully updated npm to $(npm -v)"
@@ -47,7 +49,6 @@ jobs:
 
       - name: Publish to npm registry
         if: ${{ inputs.publish }}
-        shell: bash
         run: |
           npm publish
           package_name=$(jq -r '.name' package.json)
@@ -57,7 +58,6 @@ jobs:
 
       - name: Create GitHub release
         if: ${{ inputs.create-release }}
-        shell: bash
         run: |
           notes_file="${RUNNER_TEMP}/notes.txt"
           echo "See the [changelog](https://github.com/${GITHUB_REPOSITORY}/blob/${GITHUB_REF_NAME}/CHANGELOG.md) for details." >> "${notes_file}"
