@@ -36,24 +36,39 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Set up Node.js ${{ inputs.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: ${{ inputs.node-version }}
           cache: npm
 
-      - name: Update npm to latest
+      - name: Get npm version
+        id: npm-version
         shell: bash
-        # NOTE: npm v10 has dropped support for Node.js v16.
         run: |
-          if [[ $(node -v) =~ ^v(16|14|12|10)\. ]]; then
-            npm install --global npm@9
-          else
-            npm install --global npm@latest
-          fi
-          echo "Updated npm to $(npm -v)"
+          case $(node -v) in
+            v16.*|v14.*|v12.*|v10.*)
+              major_version=9
+              ;;
+            v18.*)
+              major_version=10
+              ;;
+            *)
+              echo "latest=true" >> "${GITHUB_OUTPUT}"
+              echo "version=$(npm view npm version)" >> "${GITHUB_OUTPUT}"
+              exit 0
+              ;;
+          esac
+          version=$(npm view "npm@${major_version}" version --json | jq -r '.[-1]')
+          echo "version=${version}" >> "${GITHUB_OUTPUT}"
+
+      - name: Update npm to ${{ steps.npm-version.outputs.version }}${{ steps.npm-version.outputs.latest && ' (latest)' }}
+        shell: bash
+        env:
+          npm_version: ${{ steps.npm-version.outputs.version }}
+        run: npm install --global "npm@${npm_version}"
 
       - name: Install dependencies
         run: npm ci
@@ -66,7 +81,8 @@ jobs:
         run: npm run test:coverage --ignore-scripts
         if: ${{ inputs.node-version == inputs.node-version-coverage }}
 
-      - uses: actions/upload-artifact@v3
+      - name: Upload test coverage
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: ${{ inputs.node-version == inputs.node-version-coverage }}
         with:
           name: ${{ inputs.coverage-name }}

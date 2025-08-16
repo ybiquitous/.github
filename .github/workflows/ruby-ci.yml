@@ -11,3 +11,5 @@ jobs:
     uses: ./.github/workflows/ruby-test-reusable.yml
     with:
       os: '["ubuntu-latest"]'
+    permissions:
+      contents: read

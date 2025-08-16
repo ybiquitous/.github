@@ -28,7 +28,7 @@ permissions:
 
 jobs:
   ruby-versions:
-    uses: ruby/actions/.github/workflows/ruby_versions.yml@master
+    uses: ruby/actions/.github/workflows/ruby_versions.yml@e6eba27f7a9c48ccccb2eef935b8de5ba3facf8b
     with:
       engine: cruby
       min_version: ${{ inputs.minimum-ruby-version }}
@@ -44,9 +44,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Set up Ruby (${{ matrix.ruby-version }})
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@829114fc20da43a41d27359103ec7a63020954d4 # v1.255.0
         with:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true
@@ -58,9 +58,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Set up Ruby (${{ inputs.default-ruby-version }})
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@829114fc20da43a41d27359103ec7a63020954d4 # v1.255.0
         with:
           ruby-version: ${{ inputs.default-ruby-version }}
           bundler-cache: true
