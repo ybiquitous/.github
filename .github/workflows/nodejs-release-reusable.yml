@@ -13,10 +13,6 @@ on:
         required: false
         default: true
         type: boolean
-    secrets:
-      npm-token:
-        description: Auth token for npm registry
-        required: false
 
 jobs:
   release:
@@ -53,8 +49,6 @@ jobs:
           npm publish
           package_name=$(jq -r '.name' package.json)
           echo "::notice::Published https://www.npmjs.com/package/${package_name}"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.npm-token }}
 
       - name: Create GitHub release
         if: ${{ inputs.create-release }}
