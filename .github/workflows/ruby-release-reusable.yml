@@ -6,7 +6,7 @@ on:
       ruby-version:
         description: Ruby version
         required: false
-        default: "3.2"
+        default: "ruby" # latest
         type: string
       otp:
         description: One-time password for RubyGems.org
