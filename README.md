@@ -28,3 +28,18 @@ See the [example](.github/workflows/dependabot-auto-merge.yml).
 ### GitHub Actions
 
 - [Release](.github/workflows/action-release-reusable.yml)
+
+Example:
+
+```yaml
+name: Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    uses: ybiquitous/.github/.github/workflows/action-release-reusable.yml@main
+    permissions:
+      contents: write
+```
