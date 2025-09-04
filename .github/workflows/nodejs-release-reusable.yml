@@ -13,6 +13,11 @@ on:
         required: false
         default: true
         type: boolean
+      draft:
+        description: Set true if creating draft release
+        required: false
+        default: true
+        type: boolean
 
 jobs:
   release:
@@ -52,6 +57,9 @@ jobs:
 
       - name: Create GitHub release
         if: ${{ inputs.create-release }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DRAFT_RELEASE: ${{ inputs.draft }}
         run: |
           notes_file="${RUNNER_TEMP}/notes.txt"
           echo "See the [changelog](https://github.com/${GITHUB_REPOSITORY}/blob/${GITHUB_REF_NAME}/CHANGELOG.md) for details." >> "${notes_file}"
@@ -63,9 +71,18 @@ jobs:
             echo "https://github.com/${GITHUB_REPOSITORY}/compare/${prev_tag_name}...${GITHUB_REF_NAME}" >> "${notes_file}"
           fi
 
-          gh release create "${GITHUB_REF_NAME}" --notes-file "${notes_file}" --draft
+          if [[ "${DRAFT_RELEASE}" == "true" ]]; then
+            options='--draft'
+          else
+            options=''
+          fi
+
+          gh release create "${GITHUB_REF_NAME}" --notes-file "${notes_file}" ${options}
 
           release_url=$(gh release view "${GITHUB_REF_NAME}" --json 'url' --jq '.url')
-          echo "::notice::Released ${release_url} as draft. Edit it to publish."
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          if [[ "${DRAFT_RELEASE}" == "true" ]]; then
+            echo "::notice::Released ${release_url} as draft. Edit it to publish."
+          else
+            echo "::notice::Released ${release_url}"
+          fi

@@ -13,6 +13,7 @@ jobs:
     uses: ./.github/workflows/nodejs-release-reusable.yml
     with:
       publish: false
+      draft: false
     permissions:
       contents: write
       id-token: write
