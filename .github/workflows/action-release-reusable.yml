@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Node.js LTS
+      - name: Set up Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version-file: .node-version
@@ -68,5 +68,5 @@ jobs:
           gh release create "${NEW_TAG_NAME}" \
             --notes "See the [changelog](https://github.com/${GITHUB_REPOSITORY}/blob/${NEW_TAG_NAME}/CHANGELOG.md) for details."
 
-          release_url=$(gh release view "${GITHUB_REF_NAME}" --json 'url' --jq '.url')
+          release_url=$(gh release view "${NEW_TAG_NAME}" --json 'url' --jq '.url')
           echo "::notice::Released ${release_url}"
