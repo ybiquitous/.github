@@ -67,3 +67,6 @@ jobs:
         run: |
           gh release create "${NEW_TAG_NAME}" \
             --notes "See the [changelog](https://github.com/${GITHUB_REPOSITORY}/blob/${NEW_TAG_NAME}/CHANGELOG.md) for details."
+
+          release_url=$(gh release view "${GITHUB_REF_NAME}" --json 'url' --jq '.url')
+          echo "::notice::Released ${release_url}"
