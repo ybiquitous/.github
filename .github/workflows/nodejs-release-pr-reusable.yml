@@ -1,4 +1,4 @@
-name: Node.js Create Release PR (reusable)
+name: Node.js Release PR (reusable)
 
 on:
   workflow_call:
@@ -13,7 +13,7 @@ on:
         type: string
 
 jobs:
-  create-release-pr:
+  release-pr:
     runs-on: ubuntu-latest
     permissions:
       contents: write

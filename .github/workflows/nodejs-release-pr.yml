@@ -1,4 +1,4 @@
-name: Node.js Create Release PR
+name: Node.js Release PR
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ on:
         options: [patch, minor, major]
 
 jobs:
-  create-release-pr:
+  release-pr:
     uses: ./.github/workflows/nodejs-release-pr-reusable.yml
     with:
       new-version: ${{ github.event.inputs.new-version }}
