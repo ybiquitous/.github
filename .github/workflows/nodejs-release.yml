@@ -4,10 +4,6 @@ on:
   push:
     tags: ["**"]
 
-concurrency:
-  group: ${{ github.workflow }}
-  cancel-in-progress: true
-
 jobs:
   release:
     uses: ./.github/workflows/nodejs-release-reusable.yml
