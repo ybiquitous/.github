@@ -23,23 +23,31 @@ jobs:
     permissions:
       contents: write
     timeout-minutes: 10
+    concurrency: ${{ github.workflow }}
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
       - name: Set up Ruby ${{ inputs.ruby-version }}
         uses: ruby/setup-ruby@44511735964dcb71245e7e55f72539531f7bc0eb # v1.257.0
         with:
           ruby-version: ${{ inputs.ruby-version }}
           bundler-cache: true
-      - name: Configure Git
+
+      - name: Set up Git
         run: |
-          git config --global user.name "${GITHUB_ACTOR}"
-          git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
+
       - name: Release gem
         run: bundle exec rake release
         env:
           GEM_HOST_API_KEY: ${{ secrets.api-key }}
           GEM_HOST_OTP_CODE: ${{ inputs.otp }}
+
       - name: Create GitHub release
         run: |
           tag_name="$(git describe --tags --abbrev=0)"

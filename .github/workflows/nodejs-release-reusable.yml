@@ -26,6 +26,7 @@ jobs:
       contents: write
       id-token: write
     timeout-minutes: 10
+    concurrency: ${{ github.workflow }}
     defaults:
       run:
         shell: bash
