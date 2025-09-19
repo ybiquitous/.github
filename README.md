@@ -9,7 +9,7 @@ Common GitHub stuffs in [github.com/ybiquitous](https://github.com/ybiquitous).
 - [Test](.github/workflows/ruby-test-reusable.yml)
 - [Release](.github/workflows/ruby-release-reusable.yml)
 
-See the [example](.github/workflows/ruby-ci.yml).
+See the example [`ruby-ci.yml`](.github/workflows/ruby-ci.yml).
 
 ### Node.js
 
@@ -28,7 +28,7 @@ See the examples:
 
 - [Auto-merge](.github/workflows/dependabot-auto-merge-reusable.yml)
 
-See the [example](.github/workflows/dependabot-auto-merge.yml).
+See the example [`dependabot-auto-merge.yml`](.github/workflows/dependabot-auto-merge.yml).
 
 ### GitHub Actions
 
