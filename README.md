@@ -20,9 +20,9 @@ See the [example](.github/workflows/ruby-ci.yml).
 
 See the examples:
 
-- [`.github/workflows/nodejs-ci.yml`](.github/workflows/nodejs-ci.yml)
-- [`.github/workflows/nodejs-release.yml`](.github/workflows/nodejs-release.yml)
-- [`.github/workflows/nodejs-release-pr.yml`](.github/workflows/nodejs-release-pr.yml)
+- [`nodejs-ci.yml`](.github/workflows/nodejs-ci.yml)
+- [`nodejs-release.yml`](.github/workflows/nodejs-release.yml)
+- [`nodejs-release-pr.yml`](.github/workflows/nodejs-release-pr.yml)
 
 ### Dependabot
 
