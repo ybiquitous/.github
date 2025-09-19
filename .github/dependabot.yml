@@ -6,6 +6,9 @@ updates:
       interval: monthly
     cooldown:
       default-days: 7
+    groups:
+      dev-deps:
+        dependency-type: development
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
