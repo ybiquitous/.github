@@ -1,0 +1,84 @@
+name: Node.js Create Release PR (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      new-version:
+        description: New version to release
+        required: true
+        type: string
+      reviewers:
+        description: Reviewers for the pull request (comma-separated)
+        required: false
+        type: string
+
+jobs:
+  create-release-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    timeout-minutes: 10
+    concurrency: ${{ github.workflow }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Set up Node.js LTS
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: "lts/*"
+
+      - name: Update npm to latest
+        run: |
+          npm install --global npm@latest
+          echo "Successfully updated npm to $(npm -v)"
+
+      - name: Bump version
+        id: bump-version
+        env:
+          NEW_VERSION: ${{ github.event.inputs.new-version }}
+        run: |
+          npm version "${NEW_VERSION}" --no-git-tag-version
+          echo "new-version=$(jq -r '.version' package.json)" >> "${GITHUB_OUTPUT}"
+
+      - name: Get additional info
+        id: get-info
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "latest-tag=$(gh release view --json tagName --jq .tagName)" >> "${GITHUB_OUTPUT}"
+
+      - name: Create pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NEW_VERSION: ${{ steps.bump-version.outputs.new-version }}
+          LATEST_TAG: ${{ steps.get-info.outputs.latest-tag }}
+          REVIEWERS: ${{ github.event.inputs.reviewers }}
+        run: |
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
+
+          branch_name="release/v${NEW_VERSION}"
+          commit_message="chore: release v${NEW_VERSION}"
+          git checkout -b "${branch_name}"
+          git commit -am "${commit_message}"
+          git push origin "${branch_name}"
+
+          cat <<EOF > "${RUNNER_TEMP}/pr_body.txt"
+          This PR prepares the release of v${NEW_VERSION}.
+
+          Changes: <https://github.com/${GITHUB_REPOSITORY}/compare/${LATEST_TAG}...${branch_name}>
+          EOF
+
+          gh pr create \
+            --title "${commit_message}" \
+            --body-file "${RUNNER_TEMP}/pr_body.txt" \
+            --reviewer "${REVIEWERS}" \
+            --assignee "${GITHUB_ACTOR}"
+
+          pr_url=$(gh pr view --json url --jq '.url')
+          echo "::notice::Created pull request for releasing v${NEW_VERSION}: ${pr_url}"

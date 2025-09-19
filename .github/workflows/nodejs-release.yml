@@ -1,8 +1,9 @@
 name: Node.js Release
 
 on:
-  push:
-    tags: ["**"]
+  pull_request:
+    branches: [main]
+    types: [closed]
 
 jobs:
   release:

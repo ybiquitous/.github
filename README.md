@@ -16,8 +16,13 @@ See the [example](.github/workflows/ruby-ci.yml).
 - [Test](.github/workflows/nodejs-test-reusable.yml)
 - [Lint](.github/workflows/nodejs-lint-reusable.yml)
 - [Release](.github/workflows/nodejs-release-reusable.yml)
+- [Release PR](.github/workflows/nodejs-release-pr-reusable.yml)
 
-See the [example](.github/workflows/nodejs-ci.yml).
+See the examples:
+
+- [`.github/workflows/nodejs-ci.yml`](.github/workflows/nodejs-ci.yml)
+- [`.github/workflows/nodejs-release.yml`](.github/workflows/nodejs-release.yml)
+- [`.github/workflows/nodejs-release-pr.yml`](.github/workflows/nodejs-release-pr.yml)
 
 ### Dependabot
 
