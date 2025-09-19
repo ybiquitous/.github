@@ -97,7 +97,7 @@ jobs:
             options=''
           fi
 
-          gh release create "${NEW_TAG}" --notes-file "${notes_file}" ${options}
+          gh release create "${NEW_TAG}" --title "${NEW_TAG}" --notes-file "${notes_file}" ${options}
 
           release_url=$(gh release view "${NEW_TAG}" --json 'url' --jq '.url')
 
