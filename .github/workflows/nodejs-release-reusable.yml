@@ -82,13 +82,13 @@ jobs:
           NEW_TAG: ${{ steps.create-tag.outputs.new-tag }}
         run: |
           notes_file="${RUNNER_TEMP}/notes.txt"
-          echo "See the [changelog](https://github.com/${GITHUB_REPOSITORY}/blob/${NEW_TAG}/CHANGELOG.md) for details." >> "${notes_file}"
+          echo "See the [changelog](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/blob/${NEW_TAG}/CHANGELOG.md) for details." >> "${notes_file}"
 
           prev_tag_name=$(gh release view --json tagName --jq .tagName || echo '')
 
           if [[ -n "${prev_tag_name}" ]]; then
             echo '' >> "${notes_file}"
-            echo "https://github.com/${GITHUB_REPOSITORY}/compare/${prev_tag_name}...${NEW_TAG}" >> "${notes_file}"
+            echo "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/compare/${prev_tag_name}...${NEW_TAG}" >> "${notes_file}"
           fi
 
           if [[ "${DRAFT_RELEASE}" == "true" ]]; then
