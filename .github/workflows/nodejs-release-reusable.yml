@@ -82,7 +82,7 @@ jobs:
       - name: Create GitHub release
         if: ${{ inputs.create-release }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           DRAFT_RELEASE: ${{ inputs.draft }}
           NEW_TAG: ${{ steps.create-tag.outputs.new-tag }}
         run: |
@@ -115,6 +115,7 @@ jobs:
       - name: Update semver tag
         if: ${{ !inputs.draft && inputs.update-semver-tag }}
         env:
+          GITHUB_TOKEN: ${{ github.token }}
           NEW_TAG: ${{ steps.create-tag.outputs.new-tag }}
         run: |
           # Extract the major version from the tag, e.g., "v1.2.3" -> "v1"
@@ -125,6 +126,10 @@ jobs:
             exit 1
           fi
 
-          git push --follow-tags
-          git tag --force --annotate --message "Release ${MAJOR_VERSION_TAG}" "${MAJOR_VERSION_TAG}"
-          git push --tags --force origin "${MAJOR_VERSION_TAG}"
+          if git rev-parse "refs/tags/${MAJOR_VERSION_TAG}" >/dev/null 2>&1; then
+            echo "The tag '${MAJOR_VERSION_TAG}' exists. Updating..."
+            gh api -X PATCH "/repos/${GITHUB_REPOSITORY}/git/refs/tags/${MAJOR_VERSION_TAG}" -f "sha=${GITHUB_SHA}" -F 'force=true'
+          else
+            echo "The tag '${MAJOR_VERSION_TAG}' does not exist. Creating..."
+            gh api -X POST "/repos/${GITHUB_REPOSITORY}/git/refs" -f "ref=refs/tags/${MAJOR_VERSION_TAG}" -f "sha=${GITHUB_SHA}"
+          fi
