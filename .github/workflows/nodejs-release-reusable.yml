@@ -113,7 +113,7 @@ jobs:
           fi
 
       - name: Update semver tag
-        if: ${{ inputs.update-semver-tag }}
+        if: ${{ !inputs.draft && inputs.update-semver-tag }}
         env:
           NEW_TAG: ${{ steps.create-tag.outputs.new-tag }}
         run: |
