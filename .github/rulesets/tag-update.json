@@ -1,23 +1,17 @@
 {
-  "name": "tag",
+  "name": "tag-update",
   "target": "tag",
   "source_type": "Repository",
   "enforcement": "active",
   "conditions": {
     "ref_name": {
       "exclude": [],
-      "include": ["refs/tags/v*.*.*"]
+      "include": ["refs/tags/v[0123456789]"]
     }
   },
   "rules": [
     {
-      "type": "update"
-    },
-    {
       "type": "deletion"
-    },
-    {
-      "type": "non_fast_forward"
     }
   ],
   "bypass_actors": []
