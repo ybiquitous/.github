@@ -11,6 +11,7 @@ jobs:
     with:
       publish: false
       draft: false
+      update-semver-tag: true
     permissions:
       contents: write
       id-token: write

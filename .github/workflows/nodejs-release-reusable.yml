@@ -18,6 +18,11 @@ on:
         required: false
         default: true
         type: boolean
+      update-semver-tag:
+        description: Set true if updating semver tag (e.g., "v1")
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   release:
@@ -106,3 +111,20 @@ jobs:
           else
             echo "::notice::Released ${release_url}"
           fi
+
+      - name: Update semver tag
+        if: ${{ inputs.update-semver-tag }}
+        env:
+          NEW_TAG: ${{ steps.create-tag.outputs.new-tag }}
+        run: |
+          # Extract the major version from the tag, e.g., "v1.2.3" -> "v1"
+          MAJOR_VERSION_TAG=${NEW_TAG:0:2}
+
+          if [[ ! "${MAJOR_VERSION_TAG}" =~ ^v[0-9]$ ]]; then
+            echo "Failed to extract the major version from the tag: ${NEW_TAG}"
+            exit 1
+          fi
+
+          git push --follow-tags
+          git tag --force --annotate --message "Release ${MAJOR_VERSION_TAG}" "${MAJOR_VERSION_TAG}"
+          git push --tags --force origin "${MAJOR_VERSION_TAG}"
