@@ -127,9 +127,9 @@ jobs:
           fi
 
           if git rev-parse "refs/tags/${MAJOR_VERSION_TAG}" >/dev/null 2>&1; then
-            echo "The tag '${MAJOR_VERSION_TAG}' exists. It will be updated with '${GITHUB_SHA}'."
+            echo "The tag '${MAJOR_VERSION_TAG}' exists. Updating..."
             gh api -X PATCH "/repos/${GITHUB_REPOSITORY}/git/refs/tags/${MAJOR_VERSION_TAG}" -f "sha=${GITHUB_SHA}" -F 'force=true'
           else
-            echo "The tag '${MAJOR_VERSION_TAG}' does not exist. It will be created with '${GITHUB_SHA}'."
+            echo "The tag '${MAJOR_VERSION_TAG}' does not exist. Creating..."
             gh api -X POST "/repos/${GITHUB_REPOSITORY}/git/refs" -f "ref=refs/tags/${MAJOR_VERSION_TAG}" -f "sha=${GITHUB_SHA}"
           fi
