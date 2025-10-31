@@ -40,6 +40,6 @@ jobs:
       - name: Show message when skipped
         if: ${{ contains(fromJSON(inputs.excluded-update-types), steps.metadata.outputs.update-type) }}
         run: |
-          echo "::notice::Skipped auto-merge because the update type '${UPDATE_TYPE}' is excluded"
+          echo "::notice::Skipped auto-merge because the update type \"${UPDATE_TYPE}\" is excluded"
         env:
           UPDATE_TYPE: ${{ steps.metadata.outputs.update-type }}
