@@ -10,6 +10,6 @@ jobs:
   test:
     uses: ./.github/workflows/ruby-test-reusable.yml
     with:
-      os: '["ubuntu-latest"]'
+      os: '["ubuntu-slim"]'
     permissions:
       contents: read

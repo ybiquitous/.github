@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         node-version: ["lts/*", "20", "18", "16"]
-        os: ["ubuntu-latest"]
+        os: ["ubuntu-slim"]
     uses: ./.github/workflows/nodejs-test-reusable.yml
     with:
       node-version: ${{ matrix.node-version }}
@@ -24,7 +24,7 @@ jobs:
 
   show-coverage:
     needs: test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions:
       contents: read
     steps:
