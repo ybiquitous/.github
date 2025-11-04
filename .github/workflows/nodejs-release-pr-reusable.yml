@@ -47,7 +47,7 @@ jobs:
       - name: Determine version bump type
         id: determine-version
         env:
-          INPUT_VERSION: ${{ github.event.inputs.new-version }}
+          INPUT_VERSION: ${{ inputs.new-version }}
           GH_TOKEN: ${{ github.token }}
         run: |
           if [ "${INPUT_VERSION}" = "auto" ]; then
@@ -64,10 +64,10 @@ jobs:
             
             # Determine version bump type based on conventional commits
             # Check for breaking changes (feat! or BREAKING CHANGE)
-            if echo "${commits}" | grep -qE '^[a-z]+(\([^)]*\))?!:' || echo "${commits}" | grep -q "BREAKING CHANGE"; then
+            if echo "${commits}" | grep -qE '^[a-zA-Z]+(\([^)]*\))?!:' || echo "${commits}" | grep -q "BREAKING CHANGE"; then
               version_type="major"
             # Check for features
-            elif echo "${commits}" | grep -qE '^feat(\([^)]*\))?:'; then
+            elif echo "${commits}" | grep -qiE '^feat(\([^)]*\))?:'; then
               version_type="minor"
             # Otherwise it's a patch
             else
@@ -101,7 +101,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           NEW_VERSION: ${{ steps.bump-version.outputs.new-version }}
           LATEST_TAG: ${{ steps.get-info.outputs.latest-tag }}
-          REVIEWERS: ${{ github.event.inputs.reviewers }}
+          REVIEWERS: ${{ inputs.reviewers }}
         run: |
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
