@@ -48,7 +48,6 @@ jobs:
         id: determine-version
         if: ${{ inputs.new-version == 'auto' }}
         env:
-          NEW_VERSION: ${{ inputs.new-version }}
           GH_TOKEN: ${{ github.token }}
         run: |
           latest_tag=$(gh release view --json 'tagName' --jq '.tagName' 2>/dev/null || echo "")
