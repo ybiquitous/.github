@@ -44,49 +44,41 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Determine version bump type
+      - name: Determine version
         id: determine-version
+        if: ${{ inputs.new-version == 'auto' }}
         env:
-          INPUT_VERSION: ${{ inputs.new-version }}
+          NEW_VERSION: ${{ inputs.new-version }}
           GH_TOKEN: ${{ github.token }}
         run: |
-          if [ "${INPUT_VERSION}" = "auto" ]; then
-            # Get the latest tag
-            latest_tag=$(gh release view --json tagName --jq .tagName 2>/dev/null || echo "")
-            
-            if [ -z "${latest_tag}" ]; then
-              # If no releases exist, get recent commits (last 100 to avoid performance issues)
-              commits=$(git log --pretty=format:"%s" HEAD -n 100)
-            else
-              # Get commits since the latest tag
-              commits=$(git log --pretty=format:"%s" "${latest_tag}..HEAD")
-            fi
-            
-            # Determine version bump type based on conventional commits
-            # Check for breaking changes (feat! or BREAKING CHANGE)
-            if echo "${commits}" | grep -qE '^[a-zA-Z]+(\([^)]*\))?!:' || echo "${commits}" | grep -qi "BREAKING CHANGE"; then
-              version_type="major"
-            # Check for features
-            elif echo "${commits}" | grep -qiE '^feat(\([^)]*\))?:'; then
-              version_type="minor"
-            # Otherwise it's a patch
-            else
-              version_type="patch"
-            fi
-            
-            echo "version-type=${version_type}" >> "${GITHUB_OUTPUT}"
-            echo "::notice::Auto-detected version bump type: ${version_type}"
+          latest_tag=$(gh release view --json 'tagName' --jq '.tagName' 2>/dev/null || echo "")
+
+          if [[ -z "${latest_tag}" ]]; then
+            # If no releases exist, get recent commits (last 100 to avoid performance issues)
+            commits=$(git log --pretty=format:"%s" HEAD -n 100)
           else
-            # Use the provided version
-            echo "version-type=${INPUT_VERSION}" >> "${GITHUB_OUTPUT}"
+            # Get commits since the latest tag
+            commits=$(git log --pretty=format:"%s" "${latest_tag}..HEAD")
           fi
+
+          # Determine a version based on conventional commits
+          if echo "${commits}" | grep -qE '^feat!:'; then
+            version_type="major"
+          elif echo "${commits}" | grep -qE '^feat:'; then
+            version_type="minor"
+          else
+            version_type="patch"
+          fi
+
+          echo "version-type=${version_type}" >> "${GITHUB_OUTPUT}"
+          echo "::notice::Auto-detected version: ${version_type}"
 
       - name: Bump version
         id: bump-version
         env:
-          VERSION_TYPE: ${{ steps.determine-version.outputs.version-type }}
+          NEW_VERSION: ${{ steps.determine-version.outputs.version-type || inputs.new-version }}
         run: |
-          npm version "${VERSION_TYPE}" --no-git-tag-version
+          npm version "${NEW_VERSION}" --no-git-tag-version
           echo "new-version=$(jq -r '.version' package.json)" >> "${GITHUB_OUTPUT}"
 
       - name: Get additional info
