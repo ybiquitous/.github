@@ -61,9 +61,9 @@ jobs:
           fi
 
           # Determine a version based on conventional commits
-          if echo "${commits}" | grep -qE '^feat!:'; then
+          if echo "${commits}" | grep -qE '^feat(.+)?!:'; then
             version_type="major"
-          elif echo "${commits}" | grep -qE '^feat:'; then
+          elif echo "${commits}" | grep -qE '^feat(.+)?:'; then
             version_type="minor"
           else
             version_type="patch"
