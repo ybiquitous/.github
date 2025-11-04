@@ -55,8 +55,8 @@ jobs:
             latest_tag=$(gh release view --json tagName --jq .tagName 2>/dev/null || echo "")
             
             if [ -z "${latest_tag}" ]; then
-              # If no releases exist, get all commits
-              commits=$(git log --pretty=format:"%s" HEAD)
+              # If no releases exist, get recent commits (last 100 to avoid performance issues)
+              commits=$(git log --pretty=format:"%s" HEAD -n 100)
             else
               # Get commits since the latest tag
               commits=$(git log --pretty=format:"%s" "${latest_tag}..HEAD")
