@@ -4,8 +4,9 @@ on:
   workflow_call:
     inputs:
       new-version:
-        description: New version to release
-        required: true
+        description: New version to release (patch, minor, major, or auto)
+        required: false
+        default: auto
         type: string
       reviewers:
         description: Reviewers for the pull request (comma-separated)
@@ -43,10 +44,38 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Determine version
+        id: determine-version
+        if: ${{ inputs.new-version == 'auto' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          latest_tag=$(gh release view --json 'tagName' --jq '.tagName' 2>/dev/null || echo "")
+
+          if [[ -z "${latest_tag}" ]]; then
+            # If no releases exist, get recent commits (last 100 to avoid performance issues)
+            commits=$(git log --pretty=format:"%s" HEAD -n 100)
+          else
+            # Get commits since the latest tag
+            commits=$(git log --pretty=format:"%s" "${latest_tag}..HEAD")
+          fi
+
+          # Determine a version based on conventional commits
+          if echo "${commits}" | grep -qE '^feat!:'; then
+            version_type="major"
+          elif echo "${commits}" | grep -qE '^feat:'; then
+            version_type="minor"
+          else
+            version_type="patch"
+          fi
+
+          echo "version-type=${version_type}" >> "${GITHUB_OUTPUT}"
+          echo "::notice::Auto-detected version: ${version_type}"
+
       - name: Bump version
         id: bump-version
         env:
-          NEW_VERSION: ${{ github.event.inputs.new-version }}
+          NEW_VERSION: ${{ steps.determine-version.outputs.version-type || inputs.new-version }}
         run: |
           npm version "${NEW_VERSION}" --no-git-tag-version
           echo "new-version=$(jq -r '.version' package.json)" >> "${GITHUB_OUTPUT}"
@@ -63,7 +92,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           NEW_VERSION: ${{ steps.bump-version.outputs.new-version }}
           LATEST_TAG: ${{ steps.get-info.outputs.latest-tag }}
-          REVIEWERS: ${{ github.event.inputs.reviewers }}
+          REVIEWERS: ${{ inputs.reviewers }}
         run: |
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
