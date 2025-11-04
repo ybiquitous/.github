@@ -64,7 +64,7 @@ jobs:
             
             # Determine version bump type based on conventional commits
             # Check for breaking changes (feat! or BREAKING CHANGE)
-            if echo "${commits}" | grep -qE '^[a-zA-Z]+(\([^)]*\))?!:' || echo "${commits}" | grep -q "BREAKING CHANGE"; then
+            if echo "${commits}" | grep -qE '^[a-zA-Z]+(\([^)]*\))?!:' || echo "${commits}" | grep -qi "BREAKING CHANGE"; then
               version_type="major"
             # Check for features
             elif echo "${commits}" | grep -qiE '^feat(\([^)]*\))?:'; then
