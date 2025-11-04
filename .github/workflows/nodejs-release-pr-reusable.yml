@@ -4,8 +4,9 @@ on:
   workflow_call:
     inputs:
       new-version:
-        description: New version to release
-        required: true
+        description: New version to release (patch, minor, major, or auto)
+        required: false
+        default: auto
         type: string
       reviewers:
         description: Reviewers for the pull request (comma-separated)
@@ -43,12 +44,49 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Determine version bump type
+        id: determine-version
+        env:
+          INPUT_VERSION: ${{ github.event.inputs.new-version }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${INPUT_VERSION}" = "auto" ]; then
+            # Get the latest tag
+            latest_tag=$(gh release view --json tagName --jq .tagName 2>/dev/null || echo "")
+            
+            if [ -z "${latest_tag}" ]; then
+              # If no releases exist, get all commits
+              commits=$(git log --pretty=format:"%s" HEAD)
+            else
+              # Get commits since the latest tag
+              commits=$(git log --pretty=format:"%s" "${latest_tag}..HEAD")
+            fi
+            
+            # Determine version bump type based on conventional commits
+            # Check for breaking changes (feat! or BREAKING CHANGE)
+            if echo "${commits}" | grep -qE '^[a-z]+(\([^)]*\))?!:' || echo "${commits}" | grep -q "BREAKING CHANGE"; then
+              version_type="major"
+            # Check for features
+            elif echo "${commits}" | grep -qE '^feat(\([^)]*\))?:'; then
+              version_type="minor"
+            # Otherwise it's a patch
+            else
+              version_type="patch"
+            fi
+            
+            echo "version-type=${version_type}" >> "${GITHUB_OUTPUT}"
+            echo "::notice::Auto-detected version bump type: ${version_type}"
+          else
+            # Use the provided version
+            echo "version-type=${INPUT_VERSION}" >> "${GITHUB_OUTPUT}"
+          fi
+
       - name: Bump version
         id: bump-version
         env:
-          NEW_VERSION: ${{ github.event.inputs.new-version }}
+          VERSION_TYPE: ${{ steps.determine-version.outputs.version-type }}
         run: |
-          npm version "${NEW_VERSION}" --no-git-tag-version
+          npm version "${VERSION_TYPE}" --no-git-tag-version
           echo "new-version=$(jq -r '.version' package.json)" >> "${GITHUB_OUTPUT}"
 
       - name: Get additional info
