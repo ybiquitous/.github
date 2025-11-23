@@ -54,14 +54,16 @@ jobs:
 
           if [[ -z "${latest_tag}" ]]; then
             # If no releases exist, get recent commits (last 100 to avoid performance issues)
-            commits=$(git log --pretty=format:"%s" HEAD -n 100)
+            # Include body lines to detect BREAKING CHANGE footer
+            commits=$(git log --pretty=format:"%s%n%b" HEAD -n 100)
           else
-            # Get commits since the latest tag
-            commits=$(git log --pretty=format:"%s" "${latest_tag}..HEAD")
+            # Get commits since the latest tag (subjects + bodies)
+            commits=$(git log --pretty=format:"%s%n%b" "${latest_tag}..HEAD")
           fi
 
-          # Determine a version based on conventional commits
-          if echo "${commits}" | grep -qE '^feat(.+)?!:'; then
+          # Determine a version based on conventional commits.
+          # Major: feat! (exclamation in type/scope) OR a BREAKING CHANGE footer line.
+          if echo "${commits}" | grep -qE '^feat(.+)?!:|^BREAKING CHANGE:'; then
             version_type="major"
           elif echo "${commits}" | grep -qE '^feat(.+)?:'; then
             version_type="minor"
