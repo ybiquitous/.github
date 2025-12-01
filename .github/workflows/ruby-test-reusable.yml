@@ -45,6 +45,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Install OS packages
+        if: ${{ matrix.os == 'ubuntu-slim' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libyaml-dev # for Psych gem
       - name: Set up Ruby (${{ matrix.ruby-version }})
         uses: ruby/setup-ruby@0481980f17b760ef6bca5e8c55809102a0af1e5a # v1.263.0
         with:
@@ -59,6 +65,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Install OS packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libyaml-dev # for Psych gem
       - name: Set up Ruby (${{ inputs.default-ruby-version }})
         uses: ruby/setup-ruby@0481980f17b760ef6bca5e8c55809102a0af1e5a # v1.263.0
         with:
