@@ -29,8 +29,10 @@ jobs:
         with:
           ruby-version: ${{ inputs.ruby-version }}
           bundler-cache: true
+
       - name: Publish gem to RubyGems.org
         uses: rubygems/release-gem@v1
+
       - name: Create GitHub release
         run: |
           tag_name="$(git describe --tags --abbrev=0)"
