@@ -1,18 +1,17 @@
 name: Node.js Release
 
 on:
-  push:
-    tags: ["**"]
-
-concurrency:
-  group: ${{ github.workflow }}
-  cancel-in-progress: true
+  pull_request:
+    branches: [main]
+    types: [closed]
 
 jobs:
   release:
     uses: ./.github/workflows/nodejs-release-reusable.yml
     with:
       publish: false
+      draft: false
+      update-semver-tag: true
     permissions:
       contents: write
       id-token: write

@@ -1,6 +1,6 @@
 {
   "name": "@ybiquitous/.github",
-  "version": "0.5.0",
+  "version": "2.4.0",
   "private": true,
   "scripts": {
     "prettier": "prettier --cache --ignore-path .gitignore .",
@@ -13,9 +13,9 @@
     "test:coverage": "node -e \"fs.mkdirSync('coverage', {recursive: true}); fs.writeFileSync('coverage/sample.json', '[1, false]');\""
   },
   "devDependencies": {
-    "@commitlint/cli": "latest",
-    "@commitlint/config-conventional": "latest",
-    "prettier": "latest"
+    "@commitlint/cli": "^20.2.0",
+    "@commitlint/config-conventional": "^20.2.0",
+    "prettier": "^3.7.4"
   },
   "commitlint": {
     "extends": "@commitlint/config-conventional",
@@ -24,6 +24,11 @@
         2,
         "always",
         200
+      ],
+      "header-max-length": [
+        2,
+        "always",
+        120
       ]
     }
   }
