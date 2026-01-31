@@ -24,16 +24,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - name: Set up Ruby ${{ inputs.ruby-version }}
+      - name: Set up Ruby
         uses: ruby/setup-ruby@8d27f39a5e7ad39aebbcbd1324f7af020229645c # v1.287.0
         with:
           ruby-version: ${{ inputs.ruby-version }}
           bundler-cache: true
 
-      - name: Publish gem to RubyGems.org
+      - name: Publish gem
         uses: rubygems/release-gem@1c162a739e8b4cb21a676e97b087e8268d8fc40b # v1.1.2
 
-      - name: Create GitHub release
+      - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
