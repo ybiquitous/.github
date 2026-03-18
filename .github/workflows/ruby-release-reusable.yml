@@ -30,8 +30,23 @@ jobs:
           ruby-version: ${{ inputs.ruby-version }}
           bundler-cache: true
 
-      - name: Publish gem
-        uses: rubygems/release-gem@e9a6361a0b14562539327c2a02373edc56dd3169 # v1.1.4
+      # NOTE: Directly use rubygems/configure-rubygems-credentials, instead of rubygems/release-gem, to avoid unknown errors with Trusted Publishing.
+      # Ref:
+      # - https://github.com/rubygems/configure-rubygems-credentials/issues/349
+      # - https://guides.rubygems.org/trusted-publishing
+      - name: Configure trusted publishing credentials
+        uses: rubygems/configure-rubygems-credentials@bc6dd217f8a4f919d6835fcfefd470ef821f5c44 # v1.0.0
+
+      - name: Set up Git
+        run: |
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
+
+      - name: Release gem
+        run: bundle exec rake release
+
+      - name: Wait for release
+        run: gem exec rubygems-await pkg/*.gem
 
       - name: Create GitHub Release
         env:
