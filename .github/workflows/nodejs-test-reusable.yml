@@ -63,12 +63,15 @@ jobs:
           esac
           version=$(npm view "npm@${major_version}" version --json | jq -r '.[-1]')
           echo "version=${version}" >> "${GITHUB_OUTPUT}"
+          echo "npm version: ${version}"
 
       - name: Update npm to ${{ steps.npm-version.outputs.version }}${{ steps.npm-version.outputs.latest && ' (latest)' }}
         shell: bash
         env:
           npm_version: ${{ steps.npm-version.outputs.version }}
-        run: npm install --global "npm@${npm_version}"
+        run: |
+          npm install --global "npm@${npm_version}"
+          echo "New npm version: $(npm -v)"
 
       - name: Install dependencies
         run: npm ci
