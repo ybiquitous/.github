@@ -71,9 +71,16 @@ jobs:
       - name: |
           Update npm from ${{ steps.npm-version.outputs.current-version }} to ${{ steps.npm-version.outputs.next-version }}${{ steps.npm-version.outputs.latest && ' (latest)' }}
         env:
-          npm_version: ${{ steps.npm-version.outputs.next-version }}
+          current_npm_version: ${{ steps.npm-version.outputs.current-version }}
+          next_npm_version: ${{ steps.npm-version.outputs.next-version }}
         run: |
-          npm install --global "npm@${npm_version}"
+          # HACK: Avoid the issue: https://github.com/npm/cli/issues/9151
+          if [[ ${current_npm_version} == "10.9.7" ]]; then
+            npm install --global "npm@10.9.8"
+            echo "::warning::Updating npm to 10.9.8 first is required to avoid the issue: https://github.com/npm/cli/issues/9151"
+          fi
+
+          npm install --global "npm@${next_npm_version}"
           echo "New npm version: $(npm -v)"
 
       - name: Install dependencies
