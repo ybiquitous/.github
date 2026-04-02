@@ -34,6 +34,9 @@ jobs:
     permissions:
       contents: read
     timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -46,8 +49,9 @@ jobs:
 
       - name: Get npm version
         id: npm-version
-        shell: bash
         run: |
+          echo "current-version=$(npm -v | sed 's/^v//')" >> "${GITHUB_OUTPUT}"
+
           case $(node -v) in
             v16.*|v14.*|v12.*|v10.*)
               major_version=9
@@ -57,18 +61,17 @@ jobs:
               ;;
             *)
               echo "latest=true" >> "${GITHUB_OUTPUT}"
-              echo "version=$(npm view npm version)" >> "${GITHUB_OUTPUT}"
+              echo "next-version=$(npm view npm version)" >> "${GITHUB_OUTPUT}"
               exit 0
               ;;
           esac
           version=$(npm view "npm@${major_version}" version --json | jq -r '.[-1]')
-          echo "version=${version}" >> "${GITHUB_OUTPUT}"
-          echo "npm version: ${version}"
+          echo "next-version=${version}" >> "${GITHUB_OUTPUT}"
 
-      - name: Update npm to ${{ steps.npm-version.outputs.version }}${{ steps.npm-version.outputs.latest && ' (latest)' }}
-        shell: bash
+      - name: |
+          Update npm from ${{ steps.npm-version.outputs.current-version }} to ${{ steps.npm-version.outputs.next-version }}${{ steps.npm-version.outputs.latest && ' (latest)' }}
         env:
-          npm_version: ${{ steps.npm-version.outputs.version }}
+          npm_version: ${{ steps.npm-version.outputs.next-version }}
         run: |
           npm install --global "npm@${npm_version}"
           echo "New npm version: $(npm -v)"
