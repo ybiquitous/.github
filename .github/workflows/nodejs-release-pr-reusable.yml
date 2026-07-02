@@ -202,5 +202,5 @@ jobs:
             --reviewer "${REVIEWERS}" \
             --assignee "${GITHUB_ACTOR}"
 
-          pr_url=$(gh pr view --json url --jq '.url')
+          pr_url=$(gh pr view "${BRANCH_NAME}" --json url --jq '.url')
           echo "::notice::Created pull request for releasing v${NEW_VERSION}: ${pr_url}"
