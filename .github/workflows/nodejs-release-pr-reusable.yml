@@ -107,28 +107,13 @@ jobs:
             const repo = context.repo.repo;
             const repositoryNameWithOwner = `${owner}/${repo}`;
 
-            try {
-              await github.rest.git.createRef({
-                owner,
-                repo,
-                ref: `refs/heads/${branchName}`,
-                sha: expectedHeadOid,
-              });
-              console.log(`Created release branch: ${branchName}`);
-            } catch (error) {
-              if (error.status !== 422) {
-                throw error;
-              }
-
-              await github.rest.git.updateRef({
-                owner,
-                repo,
-                ref: `heads/${branchName}`,
-                sha: expectedHeadOid,
-                force: true,
-              });
-              console.log(`Updated release branch: ${branchName}`);
-            }
+            await github.rest.git.createRef({
+              owner,
+              repo,
+              ref: `refs/heads/${branchName}`,
+              sha: expectedHeadOid,
+            });
+            console.log(`Created release branch: ${branchName}`);
 
             const diffOutput = execSync("git diff --name-status --no-renames", { encoding: "utf8" }).trim();
             const additions = [];
