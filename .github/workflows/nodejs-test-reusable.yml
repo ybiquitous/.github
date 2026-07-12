@@ -59,6 +59,9 @@ jobs:
             v18.*)
               major_version=10
               ;;
+            v20.*)
+              major_version=11
+              ;;
             *)
               echo "latest=true" >> "${GITHUB_OUTPUT}"
               echo "next-version=$(npm view npm version)" >> "${GITHUB_OUTPUT}"
