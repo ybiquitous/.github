@@ -12,6 +12,10 @@ on:
         description: Reviewers for the pull request (comma-separated)
         required: false
         type: string
+      post-version-command:
+        description: Shell command to run after `npm version`
+        required: false
+        type: string
 
 jobs:
   release-pr:
@@ -81,6 +85,12 @@ jobs:
         run: |
           npm version "${NEW_VERSION}" --no-git-tag-version
           echo "new-version=$(jq -r '.version' package.json)" >> "${GITHUB_OUTPUT}"
+
+      - name: Run post-version command
+        if: ${{ inputs.post-version-command }}
+        env:
+          POST_VERSION_COMMAND: ${{ inputs.post-version-command }}
+        run: eval "${POST_VERSION_COMMAND}"
 
       - name: Get additional info
         id: get-info
