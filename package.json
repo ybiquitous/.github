@@ -13,9 +13,9 @@
     "test:coverage": "node -e \"fs.mkdirSync('coverage', {recursive: true}); fs.writeFileSync('coverage/sample.json', '[1, false]');\""
   },
   "devDependencies": {
-    "@commitlint/cli": "^21.1.0",
+    "@commitlint/cli": "^21.2.1",
     "@commitlint/config-conventional": "^21.0.1",
-    "prettier": "^3.8.4"
+    "prettier": "^3.9.6"
   },
   "commitlint": {
     "extends": "@commitlint/config-conventional",
