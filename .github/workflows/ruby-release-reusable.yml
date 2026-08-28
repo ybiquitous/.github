@@ -32,10 +32,6 @@ jobs:
 
       - name: Publish gem
         uses: rubygems/release-gem@7f9650160c1a4e7989fdc9855807bdbd421d8b6b # v1.4.1
-        with:
-          # RubyGems.org cannot verify attestations produced by a cross-repository reusable workflow.
-          # Error: "Certificate's SANs do not match ..."
-          attestations: false
 
       - name: Create GitHub Release
         env:
