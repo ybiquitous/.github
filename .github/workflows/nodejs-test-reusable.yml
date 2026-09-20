@@ -32,9 +32,9 @@ on:
         default: coverage/
         type: string
       shapshots-path:
-        description: Path to test snapshots
+        description: Space-separated path(s) to test snapshots
         required: false
-        default: "**/*.snapshot"
+        default: "**/*.snapshot **/*.snap"
         type: string
 
 jobs:
@@ -130,7 +130,8 @@ jobs:
           snapshots_path: ${{ inputs.shapshots-path }}
           pr_head_ref: ${{ github.event.pull_request.head.ref }}
         run: |
-          updated_snapshots=$(git diff --name-only "${snapshots_path}")
+          # shellcheck disable=SC2086
+          updated_snapshots=$(git diff --name-only ${snapshots_path})
           echo "${updated_snapshots}"
           if [[ -z "${updated_snapshots}" ]]; then
             echo "No snapshots updated."
@@ -139,6 +140,7 @@ jobs:
 
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
-          git add -- "${snapshots_path}"
+          # shellcheck disable=SC2086
+          git add -- ${snapshots_path}
           git commit --message "test: update snapshots"
           git push origin "HEAD:${pr_head_ref}"
