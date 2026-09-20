@@ -100,7 +100,6 @@ jobs:
         run: npm ci
 
       - name: Run test
-        id: test
         env:
           node_version: ${{ inputs.node-version }}
           node_version_coverage: ${{ inputs.node-version-coverage }}
@@ -124,7 +123,6 @@ jobs:
       - name: Push test snapshots
         if: >-
           ${{ inputs.node-version == inputs.node-version-snapshot &&
-              failure() && steps.test.conclusion == 'failure' &&
               github.event.pull_request.head.repo.full_name == github.repository }}
         env:
           snapshots_path: ${{ inputs.shapshots-path }}
