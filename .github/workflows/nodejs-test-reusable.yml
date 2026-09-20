@@ -32,7 +32,7 @@ on:
         default: coverage/
         type: string
       shapshots-path:
-        description: Space-separated path(s) to test snapshots
+        description: Space-separated paths to test snapshots
         required: false
         default: "**/*.snapshot **/*.snap"
         type: string
