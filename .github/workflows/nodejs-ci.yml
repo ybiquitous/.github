@@ -24,7 +24,8 @@ jobs:
       node-version-snapshot: "26"
       coverage-name: coverage
     permissions:
-      contents: read
+      contents: write
+      pull-requests: write
 
   show-coverage:
     needs: test
