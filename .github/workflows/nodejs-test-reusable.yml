@@ -126,16 +126,16 @@ jobs:
               failure() && steps.test.conclusion == 'failure' &&
               github.event.pull_request.head.repo.full_name == github.repository }}
         env:
-          shapshots_path: ${{ inputs.shapshots-path }}
+          snapshots_path: ${{ inputs.shapshots-path }}
           pr_head_ref: ${{ github.event.pull_request.head.ref }}
         run: |
-          if git diff --quiet "${snapshot_path}"; then
+          if git diff --quiet "${snapshots_path}"; then
             echo "No snapshots updated."
             exit
           fi
 
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
-          git add -- "${snapshot_path}"
+          git add -- "${snapshots_path}"
           git commit --message "test: update snapshots"
           git push origin "HEAD:${pr_head_ref}"
