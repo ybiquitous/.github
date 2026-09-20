@@ -141,6 +141,6 @@ jobs:
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
           # shellcheck disable=SC2086
-          git add -- ${snapshots_path}
+          git add -- ${updated_snapshots}
           git commit --message "test: update snapshots"
           git push origin "HEAD:${pr_head_ref}"
