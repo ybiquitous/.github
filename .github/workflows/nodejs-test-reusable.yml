@@ -104,6 +104,7 @@ jobs:
         env:
           node_version: ${{ inputs.node-version }}
           node_version_coverage: ${{ inputs.node-version-coverage }}
+          node_version_snapshot: ${{ inputs.node-version-snapshot }}
         run: |
           case "${node_version}" in
             "${node_version_coverage}") test_command='test:coverage' ;;
