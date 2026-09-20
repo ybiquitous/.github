@@ -4,7 +4,7 @@ import process from "node:process";
 const nodeVersion = process.versions.node;
 
 test("snapshot", (t) => {
-  if (/^(16|18)/.test(nodeVersion)) {
+  if (/^(16|18|20)/.test(nodeVersion)) {
     t.skip(`Snapshot testing is unsupported in Node.js v${nodeVersion}.`);
     return;
   }
