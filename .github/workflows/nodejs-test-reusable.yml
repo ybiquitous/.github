@@ -12,6 +12,10 @@ on:
         description: Node.js version for test coverage
         required: false
         type: string
+      node-version-snapshot:
+        description: Node.js version for updating test snapshots on pull requests
+        required: false
+        type: string
       os:
         description: OS name
         required: false
@@ -27,12 +31,18 @@ on:
         required: false
         default: coverage/
         type: string
+      shapshots-path:
+        description: Space-separated paths to test snapshots
+        required: false
+        default: "**/*.snapshot **/*.snap"
+        type: string
 
 jobs:
   test:
     runs-on: ${{ inputs.os }}
     permissions:
-      contents: read
+      contents: write
+      pull-requests: write
     timeout-minutes: 30
     defaults:
       run:
@@ -40,6 +50,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ case(inputs.node-version == inputs.node-version-snapshot, github.event.pull_request.head.ref, '') }}
 
       - name: Set up Node.js ${{ inputs.node-version }}
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -90,12 +102,17 @@ jobs:
         run: npm ci
 
       - name: Run test
-        run: npm test --ignore-scripts
-        if: ${{ inputs.node-version != inputs.node-version-coverage }}
-
-      - name: Run test with coverage
-        run: npm run test:coverage --ignore-scripts
-        if: ${{ inputs.node-version == inputs.node-version-coverage }}
+        env:
+          node_version: ${{ inputs.node-version }}
+          node_version_coverage: ${{ inputs.node-version-coverage }}
+          node_version_snapshot: ${{ inputs.node-version-snapshot }}
+        run: |
+          case "${node_version}" in
+            "${node_version_coverage}") test_command='test:coverage' ;;
+            "${node_version_snapshot}") test_command='test:snapshot' ;;
+                                     *) test_command='test' ;;
+          esac
+          npm --ignore-scripts run "${test_command}"
 
       - name: Upload test coverage
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -104,3 +121,26 @@ jobs:
           name: ${{ inputs.coverage-name }}
           path: ${{ inputs.coverage-path }}
           retention-days: 1
+
+      - name: Push test snapshots
+        if: >-
+          ${{ inputs.node-version == inputs.node-version-snapshot &&
+              github.event.pull_request.head.repo.full_name == github.repository }}
+        env:
+          snapshots_path: ${{ inputs.shapshots-path }}
+          pr_head_ref: ${{ github.event.pull_request.head.ref }}
+        run: |
+          # shellcheck disable=SC2086
+          updated_snapshots=$(git diff --name-only ${snapshots_path})
+          echo "${updated_snapshots}"
+          if [[ -z "${updated_snapshots}" ]]; then
+            echo "No snapshots updated."
+            exit
+          fi
+
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
+          # shellcheck disable=SC2086
+          git add -- ${updated_snapshots}
+          git commit --message "test: update snapshots"
+          git push origin "HEAD:${pr_head_ref}"

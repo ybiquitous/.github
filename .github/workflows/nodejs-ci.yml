@@ -14,16 +14,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: ["lts/*", "22", "20", "18", "16"]
+        node-version: ["lts/*", "26", "24", "22", "20", "18", "16"]
         os: ["ubuntu-slim"]
     uses: ./.github/workflows/nodejs-test-reusable.yml
     with:
       node-version: ${{ matrix.node-version }}
       os: ${{ matrix.os }}
       node-version-coverage: "22"
+      node-version-snapshot: "26"
       coverage-name: coverage
     permissions:
-      contents: read
+      contents: write
+      pull-requests: write
 
   show-coverage:
     needs: test
