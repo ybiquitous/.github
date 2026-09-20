@@ -9,5 +9,5 @@ test("snapshot", (t) => {
     return;
   }
 
-  t.assert.snapshot({ value: 1 });
+  t.assert.snapshot({ value: true });
 });
