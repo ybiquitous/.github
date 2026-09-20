@@ -130,12 +130,10 @@ jobs:
           pr_head_ref: ${{ github.event.pull_request.head.ref }}
         run: |
           updated_snapshots=$(git diff --name-only "${snapshots_path}")
+          echo "${updated_snapshots}"
           if [[ -z "${updated_snapshots}" ]]; then
             echo "No snapshots updated."
             exit
-          else
-            echo "Updated snapshots:"
-            echo "${updated_snapshots}"
           fi
 
           git config user.name "${GITHUB_ACTOR}"
