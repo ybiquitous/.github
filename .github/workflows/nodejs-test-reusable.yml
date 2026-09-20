@@ -34,7 +34,7 @@ on:
       shapshots-path:
         description: Path to test snapshots
         required: false
-        default: "**/*.snapshot"
+        default: "**/*.{snapshot,snap}"
         type: string
 
 jobs:
