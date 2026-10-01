@@ -52,6 +52,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ case(inputs.node-version == inputs.node-version-snapshot, github.event.pull_request.head.ref, '') }}
+          persist-credentials: false
 
       - name: Set up Node.js ${{ inputs.node-version }}
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -127,6 +128,7 @@ jobs:
           ${{ inputs.node-version == inputs.node-version-snapshot &&
               github.event.pull_request.head.repo.full_name == github.repository }}
         env:
+          GITHUB_TOKEN: ${{ github.token }}
           snapshots_path: ${{ inputs.shapshots-path }}
           pr_head_ref: ${{ github.event.pull_request.head.ref }}
         run: |
@@ -137,6 +139,8 @@ jobs:
             echo "No snapshots updated."
             exit
           fi
+
+          gh auth setup-git
 
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"

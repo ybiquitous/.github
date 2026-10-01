@@ -42,6 +42,7 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
+          persist-credentials: false
 
       - name: Set up Node.js LTS
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -61,6 +62,7 @@ jobs:
       - name: Create tag
         id: create-tag
         env:
+          GITHUB_TOKEN: ${{ github.token }}
           PR_BRANCH: ${{ github.event.pull_request.head.ref }}
         run: |
           NEW_VERSION=$(jq -r '.version' package.json)
@@ -70,6 +72,7 @@ jobs:
             exit 1
           fi
 
+          gh auth setup-git
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
           git tag "${NEW_VERSION_TAG}"
