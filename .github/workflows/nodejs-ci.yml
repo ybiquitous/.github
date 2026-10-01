@@ -25,7 +25,6 @@ jobs:
       coverage-name: coverage
     permissions:
       contents: write
-      pull-requests: write
 
   show-coverage:
     needs: test

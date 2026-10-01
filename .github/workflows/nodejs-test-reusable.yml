@@ -42,7 +42,6 @@ jobs:
     runs-on: ${{ inputs.os }}
     permissions:
       contents: write
-      pull-requests: write
     timeout-minutes: 30
     defaults:
       run:
