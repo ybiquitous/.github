@@ -141,7 +141,6 @@ jobs:
           fi
 
           gh auth setup-git
-
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
           # shellcheck disable=SC2086
