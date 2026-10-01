@@ -33,6 +33,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0 # for changelog generation from commit history
+          persist-credentials: false
 
       - name: Set up Node.js LTS
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -52,7 +53,7 @@ jobs:
         id: determine-version
         if: ${{ inputs.new-version == 'auto' }}
         env:
-          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           latest_tag=$(gh release view --json 'tagName' --jq '.tagName' 2>/dev/null || echo "")
 
@@ -95,7 +96,7 @@ jobs:
       - name: Get additional info
         id: get-info
         env:
-          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           echo "latest-tag=$(gh release view --json tagName --jq .tagName)" >> "${GITHUB_OUTPUT}"
 
@@ -189,7 +190,7 @@ jobs:
 
       - name: Create pull request
         env:
-          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
           NEW_VERSION: ${{ steps.bump-version.outputs.new-version }}
           LATEST_TAG: ${{ steps.get-info.outputs.latest-tag }}
           REVIEWERS: ${{ inputs.reviewers }}
