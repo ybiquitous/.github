@@ -11,7 +11,7 @@ on:
 
 jobs:
   release-pr:
-    uses: ./.github/workflows/nodejs-release-pr-reusable.yml
+    uses: $/.github/workflows/nodejs-release-pr-reusable.yml
     with:
       new-version: ${{ github.event.inputs.new-version }}
     permissions:

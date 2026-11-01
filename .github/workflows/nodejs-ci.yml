@@ -16,7 +16,7 @@ jobs:
       matrix:
         node-version: ["lts/*", "26", "24", "22", "20", "18", "16"]
         os: ["ubuntu-slim"]
-    uses: ./.github/workflows/nodejs-test-reusable.yml
+    uses: $/.github/workflows/nodejs-test-reusable.yml
     with:
       node-version: ${{ matrix.node-version }}
       os: ${{ matrix.os }}
@@ -39,6 +39,6 @@ jobs:
       - run: ls -lR downloaded/
 
   lint:
-    uses: ./.github/workflows/nodejs-lint-reusable.yml
+    uses: $/.github/workflows/nodejs-lint-reusable.yml
     permissions:
       contents: read
