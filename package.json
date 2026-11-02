@@ -15,9 +15,9 @@
     "test:snapshot": "node --test --test-update-snapshots"
   },
   "devDependencies": {
-    "@commitlint/cli": "^21.2.3",
+    "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.0.1",
-    "prettier": "^3.9.9"
+    "prettier": "^3.9.10"
   },
   "commitlint": {
     "extends": "@commitlint/config-conventional",
