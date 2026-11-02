@@ -3,6 +3,15 @@
   "version": "3.3.1",
   "private": true,
   "type": "module",
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": ">=16"
+    },
+    "packageManager": {
+      "name": "npm"
+    }
+  },
   "scripts": {
     "prettier": "prettier --cache --ignore-path .gitignore .",
     "prettier:check": "npm run prettier -- --check",
