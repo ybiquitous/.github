@@ -16,7 +16,7 @@ jobs:
       matrix:
         node-version: ["lts/*", "26", "24", "22", "20", "18", "16"]
         os: ["ubuntu-slim"]
-    uses: ./.github/workflows/nodejs-test-reusable.yml
+    uses: $/.github/workflows/nodejs-test-reusable.yml
     with:
       node-version: ${{ matrix.node-version }}
       os: ${{ matrix.os }}
@@ -32,13 +32,13 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+      - uses: actions/download-artifact@v8.0.2
         with:
           name: coverage
           path: downloaded/
       - run: ls -lR downloaded/
 
   lint:
-    uses: ./.github/workflows/nodejs-lint-reusable.yml
+    uses: $/.github/workflows/nodejs-lint-reusable.yml
     permissions:
       contents: read
